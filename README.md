@@ -13,10 +13,8 @@ This project fulfills the requirements for the Semester Project Al-K for CS-3002
 
 ## Team Members
 
-*   [Your Name] ([Your GitHub Username])
-*   [Partner's Name] ([Partner's GitHub Username]) - *If applicable*
-
-*(Ensure both members make commits if working as a pair)*
+*   Umar Iftikhar 21i-2710 (Oyeumar8633)
+*   Shafqat Mehmood 21i-0324 (Shifu34)
 
 ## Features
 
