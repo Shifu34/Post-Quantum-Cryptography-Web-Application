@@ -1,9 +1,9 @@
 # Post-Quantum-Cryptography-Web-Application
-In this repository I will create  a Post-Quantum Cryptography Web Application.
+In this repository we will create  a Post-Quantum Cryptography Web Application.
 
 # PQC Flask Kyber Demo - CS-3002 Information Security
 
-This project demonstrates Post-Quantum Cryptography (PQC) using the Kyber512 algorithm within a simple Flask web application. It allows users to:
+This project demonstrates Post-Quantum Cryptography (PQC) using the Kyber512 algorithm within a simple Flask web application. It will allow users to:
 
 1.  Generate a Kyber512 public/private key pair.
 2.  Perform Kyber encapsulation using a public key to generate a ciphertext and a shared secret.
