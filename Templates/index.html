@@ -1,36 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Encryption App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum AES Cipher</title>
+  <meta name="description" content="Quantum-resistant encryption using Kyber and AES">
+  <meta name="author" content="Lovable">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>🔐 Encryption App</h1>
-        <form method="POST">
-            <div class="section">
-                <h2>Generate Key</h2>
-                <button type="submit" name="generate_key">Generate New Key</button>
-                <p><strong>Current Key:</strong> {{ key }}</p>
-            </div>
-            <div class="section">
-                <h2>Encrypt Message</h2>
-                <textarea name="message" placeholder="Enter message to encrypt">{{ message }}</textarea>
-                <button type="submit" name="encrypt">Encrypt</button>
-                {% if encrypted_message %}
-                    <p><strong>Encrypted Message:</strong> {{ encrypted_message }}</p>
-                {% endif %}
-            </div>
-            <div class="section">
-                <h2>Decrypt Message</h2>
-                <textarea name="encrypted_message" placeholder="Enter message to decrypt">{{ encrypted_message }}</textarea>
-                <button type="submit" name="decrypt">Decrypt</button>
-                {% if decrypted_message %}
-                    <p><strong>Decrypted Message:</strong> {{ decrypted_message }}</p>
-                {% endif %}
-            </div>
-        </form>
+  <!-- Header -->
+  <header class="py-3 px-4 border-bottom">
+    <div class="container d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <div class="icon-bg">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h1 class="ms-2 mb-0 app-title">
+          <span class="text-teal">Quantum</span><span class="text-cyan">AES</span><span class="text-light">Cipher</span>
+        </h1>
+      </div>
+      <div>
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm">
+          About Kyber
+        </a>
+      </div>
     </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container py-5">
+    <div class="text-center mb-5">
+      <h1 class="gradient-title mb-3">Quantum-Resistant Encryption</h1>
+      <p class="text-muted mx-auto" style="max-width: 600px;">
+        Secure your communications with hybrid post-quantum cryptography 
+        using Kyber-512 and AES-256 encryption
+      </p>
+    </div>
+
+    <div class="row g-4 mb-4">
+      <!-- Key Card -->
+      <div class="col-md-4">
+        <div class="crypto-card p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="icon-bg bg-purple">
+              <i class="fas fa-key"></i>
+            </div>
+            <h2 class="h5 mb-0 ms-2">Quantum-Resistant Keys</h2>
+          </div>
+          
+          <div>
+            <label class="crypto-label">Public Key (Kyber-512)</label>
+            <div class="crypto-code mb-3" id="publicKeyDisplay">
+              a1b2c3d4e5f6...example public key (shortened)
+            </div>
+          </div>
+          
+          <div class="d-flex align-items-center">
+            <button class="btn btn-purple me-2" id="generateKeyBtn">
+              <span class="spinner d-none me-1">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              </span>
+              Generate New Keys
+            </button>
+            <div class="small text-muted">NIST PQC Standard</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Encryption Card -->
+      <div class="col-md-4">
+        <div class="crypto-card p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="icon-bg bg-teal">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h2 class="h5 mb-0 ms-2">Message Encryption</h2>
+          </div>
+          
+          <div class="mb-3">
+            <label for="message" class="crypto-label">Plaintext Message</label>
+            <textarea id="message" class="form-control crypto-input" rows="3" placeholder="Enter your message to encrypt..."></textarea>
+          </div>
+
+          <div class="progress mb-3 d-none" id="encryptProgress">
+            <div class="progress-bar bg-teal progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+          </div>
+          
+          <button class="btn btn-teal w-100 mb-3" id="encryptBtn">
+            Encrypt Message
+          </button>
+          
+          <div id="encryptedResult" class="d-none">
+            <label class="crypto-label">Encrypted Result (KEM+AES)</label>
+            <div class="crypto-code small" id="encryptedMessageDisplay"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decryption Card -->
+      <div class="col-md-4">
+        <div class="crypto-card p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="icon-bg bg-cyan">
+              <i class="fas fa-unlock"></i>
+            </div>
+            <h2 class="h5 mb-0 ms-2">Message Decryption</h2>
+          </div>
+          
+          <div class="progress mb-3 d-none" id="decryptProgress">
+            <div class="progress-bar bg-cyan progress-bar-striped progress-bar-animated" style="width: 100%"></div>
+          </div>
+          
+          <button class="btn btn-cyan w-100 mb-3" id="decryptBtn">
+            Decrypt Message
+          </button>
+          
+          <div id="decryptedResult" class="d-none">
+            <label class="crypto-label">Decrypted Message</label>
+            <div class="crypto-code bg-teal-light border-teal" id="decryptedMessageDisplay"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- Encryption Flow -->
+      <div class="col-lg-6">
+        <div class="crypto-card p-4">
+          <h2 class="h5 mb-4">Encryption Flow</h2>
+          
+          <div class="flow-chart">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
+              <div class="step-box mb-3 mb-md-0">
+                <div class="text-cyan small mb-1">STEP 1</div>
+                <div class="fw-medium">Key Generation</div>
+                <div class="small text-muted">Kyber-512</div>
+              </div>
+              
+              <i class="fas fa-arrow-right d-none d-md-block text-teal"></i>
+              <i class="fas fa-arrow-down d-md-none text-teal"></i>
+              
+              <div class="step-box mb-3 mb-md-0">
+                <div class="text-purple small mb-1">STEP 2</div>
+                <div class="fw-medium">Key Encapsulation</div>
+                <div class="small text-muted">Shared Secret</div>
+              </div>
+              
+              <i class="fas fa-arrow-right d-none d-md-block text-teal"></i>
+              <i class="fas fa-arrow-down d-md-none text-teal"></i>
+              
+              <div class="step-box">
+                <div class="text-teal small mb-1">STEP 3</div>
+                <div class="fw-medium">AES Encryption</div>
+                <div class="small text-muted">CBC Mode</div>
+              </div>
+            </div>
+            
+            <div class="progress">
+              <div class="progress-bar encryption-flow"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Panel -->
+      <div class="col-lg-6">
+        <div class="crypto-card p-4">
+          <div class="d-flex align-items-center mb-3">
+            <div class="icon-bg bg-cyan">
+              <i class="fas fa-info"></i>
+            </div>
+            <h2 class="h5 mb-0 ms-2">About This Application</h2>
+          </div>
+          
+          <div class="small">
+            <p>
+              This application demonstrates <span class="text-teal fw-medium">post-quantum cryptography</span> using 
+              Kyber-512 (a NIST standardized quantum-resistant key encapsulation mechanism) combined with 
+              AES-256 for symmetric encryption.
+            </p>
+            
+            <h3 class="text-cyan fw-medium mt-3">How it works:</h3>
+            
+            <ol class="ps-3 text-light-muted">
+              <li>Generate a Kyber key pair (public/private keys)</li>
+              <li>Encrypt your message using Kyber to securely exchange an AES key</li>
+              <li>AES encrypts your actual message data with the shared key</li>
+              <li>Decrypt using your private key to recover the original message</li>
+            </ol>
+            
+            <div class="gradient-box p-3 mt-3">
+              <p class="fst-italic mb-0">
+                This hybrid approach combines quantum-resistant security with the performance of traditional encryption.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-3 px-4 border-top text-center">
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex align-items-center gap-1 small text-muted">
+        <i class="fas fa-lock fa-xs"></i>
+        <span>Quantum-Resistant Encryption Demo</span>
+      </div>
+      <p class="small text-muted mb-0">
+        Combining Kyber-512 & AES-256 for post-quantum security
+      </p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Custom JavaScript -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
