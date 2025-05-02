@@ -1,0 +1,3 @@
+Flask>=2.0
+pycryptodome>=3.9 # For encryption and decryption of sensitive data
+khyber_py

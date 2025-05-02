@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encryption App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Encryption App</h1>
+        <form method="POST">
+            <div class="section">
+                <h2>Generate Key</h2>
+                <button type="submit" name="generate_key">Generate New Key</button>
+                <p><strong>Current Key:</strong> {{ key }}</p>
+            </div>
+            <div class="section">
+                <h2>Encrypt Message</h2>
+                <textarea name="message" placeholder="Enter message to encrypt">{{ message }}</textarea>
+                <button type="submit" name="encrypt">Encrypt</button>
+                {% if encrypted_message %}
+                    <p><strong>Encrypted Message:</strong> {{ encrypted_message }}</p>
+                {% endif %}
+            </div>
+            <div class="section">
+                <h2>Decrypt Message</h2>
+                <textarea name="encrypted_message" placeholder="Enter message to decrypt">{{ encrypted_message }}</textarea>
+                <button type="submit" name="decrypt">Decrypt</button>
+                {% if decrypted_message %}
+                    <p><strong>Decrypted Message:</strong> {{ decrypted_message }}</p>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+</body>
+</html>
